@@ -52,6 +52,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 function prepareMath(markdown: string) {
   return markdown
+    .replace(/^### /gm, "#### ")
+    .replace(/^## /gm, "### ")
+    .replace(/^# /gm, "## ")
     .replace(/\$\$\s*([\s\S]*?)\s*\$\$/g, (_, formula: string) => `\n<div class="math-block">\\[\n${formula.trim()}\n\\]</div>\n`)
     .replace(/\\\(([^\n]*?)\\\)/g, (_, formula: string) => `$${formula}$`);
 }

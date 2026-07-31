@@ -10,11 +10,13 @@
   --coral: #f1a896;
   --lavender: #d9d2ee;
   --blue: #bfd7e4;
+  --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", Arial, Helvetica, sans-serif;
+  --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
 }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, "PingFang SC", "Microsoft YaHei", sans-serif; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-sans); }
 button, a { font: inherit; }
 button { cursor: pointer; }
 a { color: inherit; text-decoration: none; }
@@ -65,7 +67,7 @@ h1 em, .publish-copy em { font-family: Georgia, "Times New Roman", serif; font-w
 
 .intro-strip { padding: 35px 0 108px; border-top: 1px solid var(--line); }
 .intro-content { display: grid; grid-template-columns: 1fr 1fr; gap: 55px; padding-top: 28px; }
-.intro-content h2, .section-heading h2, .snapshot-body h2, .publish-copy h2 { margin: 0; font: 500 clamp(37px, 5vw, 64px)/.95 Arial, sans-serif; letter-spacing: -.075em; }
+.intro-content h2, .section-heading h2, .snapshot-body h2, .publish-copy h2 { margin: 0; font: 500 clamp(37px, 5vw, 64px)/.95 var(--font-serif); letter-spacing: -.055em; }
 .intro-content h2 span { font-family: Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -.08em; }
 .intro-text { max-width: 410px; padding-top: 5px; color: #666762; font-size: 17px; line-height: 1.7; }
 .intro-text .question { margin-top: 17px; color: var(--ink); font: italic 24px/1.25 Georgia, serif; letter-spacing: -.03em; }
@@ -115,7 +117,7 @@ h1 em, .publish-copy em { font-family: Georgia, "Times New Roman", serif; font-w
 .map-dot.mint { background: var(--mint); }.map-dot.coral { background: var(--coral); }.map-dot.blue { background: var(--blue); }
 .map-index { padding-left: 75px; color: #999a94; font: 11px/1 "Courier New", monospace; }
 .map-kicker { margin-bottom: 10px; color: #898a84; }
-.map-item h3 { margin: 0 0 7px; font: 500 28px/1 Arial, sans-serif; letter-spacing: -.06em; }
+.map-item h3 { margin: 0 0 7px; font: 500 28px/1 var(--font-serif); letter-spacing: -.045em; }
 .map-item p:last-child { margin: 0; color: #6a6c66; font-size: 13px; }
 .map-status { color: #8a8b85; font: 10px/1 "Courier New", monospace; text-align: right; }
 
@@ -155,7 +157,7 @@ h1 em, .publish-copy em { font-family: Georgia, "Times New Roman", serif; font-w
 .note-callout { margin: 32px 0 75px; padding: 26px 30px; border-left: 4px solid var(--ink); }.note-callout.mint { background: #dcecdf; }.note-callout.sun { background: #f5e8b7; }.note-callout.coral { background: #f3bdaf; }.note-callout strong { display: block; margin-bottom: 9px; font: 700 12px/1 "Courier New", monospace; letter-spacing: .05em; text-transform: uppercase; }.note-callout p { margin: 0; font-size: 15px; }
 .note-steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 35px; }.note-step { display: grid; grid-template-columns: 34px 1fr; gap: 13px; min-height: 112px; padding: 19px; border: 1px solid var(--line); }.note-step.mint { background: #edf6ee; }.note-step.coral { background: #f9e4df; }.note-step > span { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; background: var(--ink); color: var(--paper); font: 10px/1 "Courier New", monospace; }.note-step strong { display: block; margin: 2px 0 8px; font-size: 15px; }.note-step p { margin: 0; font-size: 13px; line-height: 1.55; }.note-timeline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 35px; }.note-timeline .note-step { background: transparent; }
 .note-endnote { margin-top: 100px; padding-top: 27px; border-top: 1px solid var(--line); }.note-endnote > p:last-child { max-width: 600px; margin-bottom: 0; font: italic 22px/1.55 Georgia, serif; color: var(--ink); }
-.notion-rendered { min-width: 0; }.notion-rendered h1 { margin: 0 0 28px; font: 500 clamp(38px, 5vw, 66px)/.95 Arial, sans-serif; letter-spacing: -.075em; }.notion-rendered h2 { margin: 70px 0 19px; font: 500 clamp(31px, 4vw, 51px)/1 Arial, sans-serif; letter-spacing: -.07em; }.notion-rendered h3 { margin: 42px 0 14px; font: 500 27px/1.05 Arial, sans-serif; letter-spacing: -.05em; }.notion-rendered p, .notion-rendered li { color: #5d6058; font-size: 16px; line-height: 1.9; }.notion-rendered p { margin: 0 0 20px; }.notion-rendered ul, .notion-rendered ol { margin: 12px 0 28px; padding-left: 25px; }.notion-rendered li { padding-left: 6px; margin-bottom: 7px; }.notion-rendered strong { color: var(--ink); }.notion-rendered hr { margin: 45px 0; border: 0; border-top: 1px solid var(--line); }.notion-rendered blockquote { margin: 28px 0; padding: 16px 22px; border-left: 3px solid var(--coral); background: #ebe7df; }.notion-rendered blockquote p { margin: 0; font-size: 14px; }.notion-rendered code { padding: 2px 5px; background: #ebe7df; font: 0.9em "Courier New", monospace; }.notion-rendered .math-block { display: block; margin: 30px 0 38px; padding: 25px 28px; overflow-x: auto; border-left: 4px solid var(--ink); background: #ebe7df; }.notion-rendered .math-block mjx-container { margin: 0 !important; font-size: 115% !important; }.notion-rendered mjx-container { color: var(--ink); }.notion-rendered > p:first-child { margin-bottom: 35px; color: #777873; font: 10px/1.6 "Courier New", monospace; }.notion-rendered > p:first-child a { text-decoration: underline; text-underline-offset: 3px; }
+.notion-rendered { min-width: 0; }.notion-rendered h1 { margin: 0 0 28px; font: 500 clamp(38px, 5vw, 66px)/.95 var(--font-serif); letter-spacing: -.055em; }.notion-rendered h2 { margin: 70px 0 19px; font: 600 clamp(31px, 4vw, 51px)/1.12 var(--font-serif); letter-spacing: -.045em; }.notion-rendered h3 { margin: 42px 0 14px; font: 600 27px/1.18 var(--font-serif); letter-spacing: -.035em; }.notion-rendered h4 { margin: 30px 0 12px; font: 600 21px/1.35 var(--font-serif); }.notion-rendered p, .notion-rendered li { color: #5d6058; font-size: 16px; line-height: 1.9; }.notion-rendered p { margin: 0 0 20px; }.notion-rendered ul, .notion-rendered ol { margin: 12px 0 28px; padding-left: 25px; }.notion-rendered li { padding-left: 6px; margin-bottom: 7px; }.notion-rendered strong { color: var(--ink); }.notion-rendered hr { margin: 45px 0; border: 0; border-top: 1px solid var(--line); }.notion-rendered blockquote { margin: 28px 0; padding: 16px 22px; border-left: 3px solid var(--coral); background: #ebe7df; }.notion-rendered blockquote p { margin: 0; font-size: 14px; }.notion-rendered code { padding: 2px 5px; background: #ebe7df; font: 0.9em "Courier New", monospace; }.notion-rendered .math-block { display: block; margin: 30px 0 38px; padding: 25px 28px; overflow-x: auto; border-left: 4px solid var(--ink); background: #ebe7df; }.notion-rendered .math-block mjx-container { margin: 0 !important; font-size: 115% !important; }.notion-rendered mjx-container { color: var(--ink); }.notion-rendered > p:first-child { margin-bottom: 35px; color: #777873; font: 10px/1.6 "Courier New", monospace; }.notion-rendered > p:first-child a { text-decoration: underline; text-underline-offset: 3px; }
 
 @media (max-width: 760px) {
   .shell { width: min(100% - 36px, 560px); }
