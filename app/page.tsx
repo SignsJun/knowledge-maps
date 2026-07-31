@@ -89,8 +89,8 @@ function jumpToSection(id: string, event: MouseEvent<HTMLAnchorElement>) {
   if (!target) return;
 
   event.preventDefault();
-  target.scrollIntoView({ behavior: "auto", block: "start" });
-  window.history.replaceState(null, "", `#${id}`);
+  const top = target.getBoundingClientRect().top + window.scrollY;
+  window.scrollTo({ top, left: 0, behavior: "auto" });
 }
 
 export default function Home() {

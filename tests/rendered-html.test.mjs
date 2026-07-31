@@ -48,7 +48,7 @@ test("keeps the finished homepage free of starter preview scaffolding", async ()
 
   assert.match(page, /Generative/);
   assert.match(page, /noteSnapshots/);
-  assert.match(page, /scrollIntoView\(\{ behavior: "auto"/);
+  assert.match(page, /window\.scrollTo\(\{ top, left: 0, behavior: "auto"/);
   assert.match(layout, /Generative Model Notes/);
   assert.match(layout, /openGraph/);
   assert.doesNotMatch(page, /Yifan|Positional Encoding|Swin-Transformer|ResShift|Rectified Flow|MeanFlow/i);
