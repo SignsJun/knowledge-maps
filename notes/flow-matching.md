@@ -1,6 +1,3 @@
-> 原始笔记：Flow model & Flow Matching  
-> 来源：[Notion 页面](https://app.notion.com/p/23676ad5de008056876de603966dcd6f)
-
 # Preliminary
 
 Flow-based model 的基础是可逆变换与变量变换公式。

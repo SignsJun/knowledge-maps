@@ -51,17 +51,29 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 function prepareMath(markdown: string) {
-  return markdown
+  const inlineMath: string[] = [];
+  const registerInlineMath = (formula: string) => {
+    const token = `MATHINLINE${inlineMath.length}END`;
+    inlineMath.push(`<span class="math-inline">\\(${formula}\\)</span>`);
+    return token;
+  };
+
+  const prepared = markdown
     .replace(/^### /gm, "#### ")
     .replace(/^## /gm, "### ")
     .replace(/^# /gm, "## ")
     .replace(/\$\$\s*([\s\S]*?)\s*\$\$/g, (_, formula: string) => `\n<div class="math-block">\\[\n${formula.trim()}\n\\]</div>\n`)
-    .replace(/\\\(([^\n]*?)\\\)/g, (_, formula: string) => `$${formula}$`);
+    .replace(/\\\(([^\n]*?)\\\)/g, (_, formula: string) => registerInlineMath(formula))
+    .replace(/\$([^$\n]+)\$/g, (_, formula: string) => registerInlineMath(formula));
+
+  return { markdown: prepared, inlineMath };
 }
 
 async function renderNote(markdownFile: string) {
   const markdown = await readFile(path.join(process.cwd(), "notes", markdownFile), "utf8");
-  return marked.parse(prepareMath(markdown), { gfm: true, breaks: true });
+  const { markdown: preparedMarkdown, inlineMath } = prepareMath(markdown);
+  const rendered = marked.parse(preparedMarkdown, { gfm: true, breaks: true });
+  return inlineMath.reduce((html, formula, index) => html.replaceAll(`MATHINLINE${index}END`, formula), rendered);
 }
 
 export default async function NotePage({ params }: { params: Promise<{ slug: string }> }) {

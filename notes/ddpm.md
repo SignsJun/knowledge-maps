@@ -1,6 +1,3 @@
-> 原始笔记：DDPM  
-> 来源：[Notion 页面](https://app.notion.com/p/21a76ad5de008081a34ae41d857d8938)
-
 作者：陈栩钧
 
 # 概括
@@ -86,22 +83,78 @@ $$
 
 # ELBO 与训练目标
 
-DDPM 可以看作一个潜变量模型。直接最大化 \(\log p_\theta(x_0)\) 很困难，因此使用变分下界（ELBO）：
+DDPM 可以看作一个潜变量模型。为了最大化数据的对数似然 \(\log p_\theta(x_0)\)，引入前向过程 \(q(x_{1:T}\mid x_0)\) 作为变分分布。
+
+## 从似然到变分下界
+
+先插入 \(q(x_{1:T}\mid x_0)\) 与其倒数：
+
+$$
+\begin{aligned}
+\log p_\theta(x_0)
+&=
+\log\int p_\theta(x_{0:T})\,\mathrm{d}x_{1:T} \\
+&=
+\log\int
+q(x_{1:T}\mid x_0)
+\frac{p_\theta(x_{0:T})}{q(x_{1:T}\mid x_0)}
+\,\mathrm{d}x_{1:T} \\
+&=
+\log\mathbb{E}_{q(x_{1:T}\mid x_0)}
+\left[
+\frac{p_\theta(x_{0:T})}{q(x_{1:T}\mid x_0)}
+\right].
+\end{aligned}
+$$
+
+利用 Jensen 不等式 \(\log\mathbb{E}[X]\geq\mathbb{E}[\log X]\)，得到：
+
+$$
+\log p_\theta(x_0)
+\geq
+\mathbb{E}_{q(x_{1:T}\mid x_0)}
+\left[
+\log
+\frac{p_\theta(x_{0:T})}{q(x_{1:T}\mid x_0)}
+\right].
+$$
+
+右侧就是 ELBO。训练时最大化 ELBO，等价于最小化负的 ELBO。
+
+## 利用扩散过程分解联合分布
+
+反向模型与前向过程分别满足：
+
+$$
+p_\theta(x_{0:T})
+=
+p(x_T)
+\prod_{t=1}^{T}
+p_\theta(x_{t-1}\mid x_t),
+$$
+
+$$
+q(x_{1:T}\mid x_0)
+=
+\prod_{t=1}^{T}
+q(x_t\mid x_{t-1}).
+$$
+
+将它们代入 ELBO，并把 \(t=1\) 的重建项、\(t=T\) 的先验项以及中间去噪项分开：
 
 $$
 \begin{aligned}
 \log p_\theta(x_0)
 \geq\;&
-\mathbb{E}_{q(x_{1:T}\mid x_0)}
-\left[
-\log
-\frac{p_\theta(x_{0:T})}{q(x_{1:T}\mid x_0)}
-\right] \\
-=\;&
 \mathbb{E}_{q}
-[\log p_\theta(x_0\mid x_1)]
--
-D_{\mathrm{KL}}\!\left(q(x_T\mid x_0)\,\|\,p(x_T)\right) \\
+\left[
+\log p_\theta(x_0\mid x_1)
+\right] \\
+&-
+D_{\mathrm{KL}}
+\left(
+q(x_T\mid x_0)\,\|\,p(x_T)
+\right) \\
 &-
 \sum_{t=2}^{T}
 \mathbb{E}_{q}
@@ -116,13 +169,136 @@ p_\theta(x_{t-1}\mid x_t)
 \end{aligned}
 $$
 
-这个分解包含三部分：
+如果定义负 ELBO 为训练损失，就有：
 
-- **重建项**：最后一步从 \(x_1\) 恢复 \(x_0\) 的能力。
-- **先验匹配项**：让终点噪声分布接近预设先验 \(p(x_T)\)。
-- **去噪匹配项**：让模型学习到的反向过程接近真实后验。
+$$
+\mathcal{L}_{\mathrm{ELBO}}
+=
+\underbrace{
+D_{\mathrm{KL}}\left(q(x_T\mid x_0)\,\|\,p(x_T)\right)
+}_{\mathcal{L}_T\text{：先验匹配}}
++
+\sum_{t=2}^{T}
+\underbrace{
+\mathbb{E}_{q}
+\left[
+D_{\mathrm{KL}}
+\left(
+q(x_{t-1}\mid x_t,x_0)
+\,\|\,
+p_\theta(x_{t-1}\mid x_t)
+\right)
+\right]
+}_{\mathcal{L}_{t-1}\text{：去噪匹配}}
+-
+\underbrace{
+\mathbb{E}_{q}
+\left[
+\log p_\theta(x_0\mid x_1)
+\right]
+}_{\mathcal{L}_0\text{：重建}}.
+$$
 
-当反向方差固定，并将均值写成噪声预测形式时，目标可以简化为最常用的均方误差：
+因此，ELBO 的“等量变化”可以概括为：
+
+$$
+\mathcal{L}_{\mathrm{ELBO}}
+=
+\mathcal{L}_T
++
+\sum_{t=2}^{T}\mathcal{L}_{t-1}
++
+\mathcal{L}_0.
+$$
+
+三项分别对应：
+
+- **先验匹配项**：让最后的噪声分布接近预设先验 \(p(x_T)\)。
+- **去噪匹配项**：让模型的反向转移接近真实后验。
+- **重建项**：让最后一步能够从 \(x_1\) 恢复 \(x_0\)。
+
+## 从 KL 散度到噪声预测
+
+在 DDPM 中，真实后验与模型反向分布都取高斯形式，并固定反向方差。真实后验的均值为：
+
+$$
+\tilde{\mu}_t(x_t,x_0)
+=
+\frac{\sqrt{\alpha_t}(1-\bar{\alpha}_{t-1})}{1-\bar{\alpha}_t}x_t
++
+\frac{\sqrt{\bar{\alpha}_{t-1}}\beta_t}{1-\bar{\alpha}_t}x_0.
+$$
+
+由前向过程：
+
+$$
+x_0
+=
+\frac{x_t-\sqrt{1-\bar{\alpha}_t}\,\epsilon}
+{\sqrt{\bar{\alpha}_t}},
+$$
+
+代回上式，可以得到只依赖 \(x_t\) 和噪声 \(\epsilon\) 的形式：
+
+$$
+\tilde{\mu}_t(x_t,x_0)
+=
+\frac{1}{\sqrt{\alpha_t}}
+\left(
+x_t
+-
+\frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon
+\right).
+$$
+
+模型则用 \(\epsilon_\theta(x_t,t)\) 替代真实噪声：
+
+$$
+\mu_\theta(x_t,t)
+=
+\frac{1}{\sqrt{\alpha_t}}
+\left(
+x_t
+-
+\frac{\beta_t}{\sqrt{1-\bar{\alpha}_t}}
+\epsilon_\theta(x_t,t)
+\right).
+$$
+
+两个同方差高斯分布之间的 KL 散度，关于 \(\theta\) 的部分只剩均值差：
+
+$$
+D_{\mathrm{KL}}
+\left(
+q\,\|\,p_\theta
+\right)
+=
+\frac{1}{2\tilde{\beta}_t}
+\left\|
+\tilde{\mu}_t-\mu_\theta
+\right\|_2^2
++
+C.
+$$
+
+代入上面的均值表达式：
+
+$$
+D_{\mathrm{KL}}
+\left(
+q\,\|\,p_\theta
+\right)
+=
+\frac{\beta_t^2}
+{2\tilde{\beta}_t\alpha_t(1-\bar{\alpha}_t)}
+\left\|
+\epsilon-\epsilon_\theta(x_t,t)
+\right\|_2^2
++
+C.
+$$
+
+也就是说，在忽略只依赖时间步 \(t\) 的权重以及常数项后，ELBO 的去噪匹配项就转化为了噪声预测的均方误差：
 
 $$
 \mathcal{L}_{\mathrm{simple}}
@@ -134,6 +310,8 @@ $$
 \right\|_2^2
 \right].
 $$
+
+这就是 DDPM 论文和实际实现中最常见的训练目标。
 
 # 采样流程
 

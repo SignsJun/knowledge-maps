@@ -179,30 +179,30 @@ export default function Home() {
       <section className="map-section shell" id="map">
         <div className="section-heading map-heading">
           <div>
-            <p className="section-label">THE LEARNING MAP</p>
-            <h2>Follow the thread</h2>
+            <p className="section-label">THE LEARNING MAP / GENERATIVE MODELS</p>
+            <h2>从噪声<br /><em>走向数据。</em></h2>
           </div>
-          <p className="heading-note">Three views of<br />one generation problem.</p>
+          <p className="heading-note">先理解扩散，再学习方向，<br />最后把分布连续地搬运起来。</p>
         </div>
         <div className="map-list">
           <div className="map-line" aria-hidden="true" />
           <article className="map-item">
             <span className="map-dot mint" />
             <div className="map-index">01</div>
-            <div><p className="map-kicker">PROBABILISTIC VIEW</p><h3>Diffuse the data</h3><p>DDPM · forward and reverse processes</p></div>
-            <span className="map-status">1 note</span>
+            <div><p className="map-kicker">DIFFUSION</p><h3>先把数据分解成噪声</h3><p>DDPM · 前向加噪 · 反向后验 · ELBO</p></div>
+            <span className="map-status">01 / 03</span>
           </article>
           <article className="map-item highlighted">
             <span className="map-dot coral" />
             <div className="map-index">02</div>
-            <div><p className="map-kicker">GEOMETRIC VIEW</p><h3>Follow the score</h3><p>Score matching · density gradients</p></div>
-            <span className="map-status">1 note</span>
+            <div><p className="map-kicker">SCORE FIELD</p><h3>再学习局部的方向</h3><p>Score matching · DSM · NCSN · Langevin</p></div>
+            <span className="map-status">02 / 03</span>
           </article>
           <article className="map-item">
             <span className="map-dot blue" />
             <div className="map-index">03</div>
-            <div><p className="map-kicker">TRANSPORT VIEW</p><h3>Move the distribution</h3><p>Flow matching · velocity fields</p></div>
-            <span className="map-status">1 note</span>
+            <div><p className="map-kicker">CONTINUOUS TRANSPORT</p><h3>最后用 ODE 搬运分布</h3><p>Flow matching · CFM · velocity field</p></div>
+            <span className="map-status">03 / 03</span>
           </article>
         </div>
       </section>

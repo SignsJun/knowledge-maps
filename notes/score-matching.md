@@ -1,6 +1,3 @@
-> 原始笔记：Score based Model & Score Matching  
-> 来源：[Notion 页面](https://app.notion.com/p/22376ad5de00808284b0e78de416af99)
-
 作者：陈栩钧
 
 # 概述

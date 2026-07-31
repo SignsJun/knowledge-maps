@@ -26,6 +26,8 @@ test("server-renders the public learning notes homepage", async () => {
   assert.match(html, /Score matching/);
   assert.match(html, /Flow matching/);
   assert.match(html, /03 notes/);
+  assert.match(html, /THE LEARNING MAP \/ GENERATIVE MODELS/);
+  assert.match(html, /从噪声/);
   assert.match(html, /From noise to structure/i);
   assert.match(html, /og\.png/);
   assert.doesNotMatch(html, /Yifan|Positional Encoding|Swin-Transformer|ResShift|Rectified Flow|MeanFlow/i);
@@ -59,9 +61,13 @@ test("pre-renders the three note pages as readable web pages", async () => {
   for (const html of pages) {
     assert.match(html, /class="note-page"/);
     assert.match(html, /class="math-block"/);
+    assert.match(html, /class="math-inline"/);
     assert.match(html, /mathjax@3/);
-    assert.match(html, /作者：|原始笔记：/);
+    assert.match(html, /class="note-content notion-rendered"/);
+    assert.doesNotMatch(html, /class="math-inline"[^>]*>[^<]*<em>/);
     assert.match(html, /GENERATIVE MODEL NOTES/);
+    assert.doesNotMatch(html, /原始笔记|Notion 页面/);
     assert.doesNotMatch(html, /<body>\s*#|```markdown|react-loading-skeleton/i);
   }
+  assert.match(pages[0], /Jensen|先验匹配|去噪匹配/);
 });
