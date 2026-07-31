@@ -2,21 +2,21 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Yifan’s Notes — Generative Models",
-  description: "A public learning notebook on DDPM, score-based models, flow matching, and beyond.",
+  title: "Generative Model Notes — DDPM, Score Matching & Flow Matching",
+  description: "A public learning notebook on DDPM, score matching, and flow matching.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
   },
   openGraph: {
-    title: "Yifan’s Notes — Generative Models",
-    description: "From noise to structure: notes on generative models, shared in public.",
+    title: "Generative Model Notes — DDPM, Score Matching & Flow Matching",
+    description: "From noise to structure: three notes on generative models, shared in public.",
     images: ["/og.png"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Yifan’s Notes — Generative Models",
-    description: "From noise to structure: notes on generative models, shared in public.",
+    title: "Generative Model Notes — DDPM, Score Matching & Flow Matching",
+    description: "From noise to structure: three notes on generative models, shared in public.",
     images: ["/og.png"],
   },
 };

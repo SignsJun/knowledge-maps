@@ -25,10 +25,11 @@ const files = await collectFiles(clientRoot);
 
 for (const file of files) {
   const original = await readFile(file, "utf8");
+  const relativeRoot = path.relative(path.dirname(file), clientRoot).replaceAll(path.sep, "/") || ".";
   const prepared = original
-    .replaceAll("/assets/", "./assets/")
-    .replaceAll("/og.png", "./og.png")
-    .replaceAll("/favicon.svg", "./favicon.svg");
+    .replaceAll("/assets/", `${relativeRoot}/assets/`)
+    .replaceAll("/og.png", `${relativeRoot}/og.png`)
+    .replaceAll("/favicon.svg", `${relativeRoot}/favicon.svg`);
 
   if (prepared !== original) {
     await writeFile(file, prepared, "utf8");
