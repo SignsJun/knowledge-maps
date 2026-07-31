@@ -207,7 +207,6 @@ export default function Home() {
             <p className="section-label">THE LEARNING MAP / GENERATIVE MODELS</p>
             <h2>从噪声<br /><em>走向数据。</em></h2>
           </div>
-          <p className="heading-note">从逐步去噪，到学习 score field，<br />再用 ODE 连续搬运分布。</p>
         </div>
         <div className="map-list">
           <div className="map-line" aria-hidden="true" />
