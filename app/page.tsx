@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import type { MouseEvent } from "react";
 
 type Note = {
   title: string;
@@ -81,6 +82,17 @@ const summaryFormulas: Record<string, string> = {
   "Flow matching": String.raw`\frac{\mathrm{d}}{\mathrm{d}t}\psi_t(\mathbf{x}) = u_t\!\left(\psi_t(\mathbf{x})\right)`,
 };
 
+function jumpToSection(id: string, event: MouseEvent<HTMLAnchorElement>) {
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+  const target = document.getElementById(id);
+  if (!target) return;
+
+  event.preventDefault();
+  target.scrollIntoView({ behavior: "auto", block: "start" });
+  window.history.replaceState(null, "", `#${id}`);
+}
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState("All notes");
   const [activeSnapshot, setActiveSnapshot] = useState("DDPM");
@@ -112,9 +124,9 @@ export default function Home() {
           <span>GENERATIVE MODEL NOTES</span>
         </a>
         <div className="nav-links">
-          <a href="#notes">Notes</a>
-          <a href="#map">The map</a>
-          <a href="#about">About</a>
+          <a href="#notes" onClick={(event) => jumpToSection("notes", event)}>Notes</a>
+          <a href="#map" onClick={(event) => jumpToSection("map", event)}>The map</a>
+          <a href="#about" onClick={(event) => jumpToSection("about", event)}>About</a>
         </div>
         <a className="nav-cta" href="https://github.com/SignsJun/knowledge-maps" target="_blank" rel="noreferrer">Open repository <span aria-hidden="true">→</span></a>
       </nav>
@@ -125,8 +137,8 @@ export default function Home() {
           <h1>Generative<br /><em>models</em><span className="period">.</span></h1>
           <p className="hero-intro">把复杂的生成模型，拆成可以复习、可以复现，也可以分享的路径。</p>
           <div className="hero-actions">
-            <a className="button button-dark" href="#notes">Explore notes <span aria-hidden="true">→</span></a>
-            <a className="text-link" href="#about">What is this? <span aria-hidden="true">→</span></a>
+            <a className="button button-dark" href="#notes" onClick={(event) => jumpToSection("notes", event)}>Explore notes <span aria-hidden="true">→</span></a>
+            <a className="text-link" href="#about" onClick={(event) => jumpToSection("about", event)}>What is this? <span aria-hidden="true">→</span></a>
           </div>
         </div>
         <div className="hero-visual" aria-label="生成模型从噪声走向结构的抽象图" role="img">
