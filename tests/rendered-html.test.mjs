@@ -31,6 +31,7 @@ test("server-renders the public learning notes homepage", async () => {
   assert.match(html, /先理解扩散，再学习方向/);
   assert.doesNotMatch(html, /Forward process · reverse denoising|Score function · DSM|Conditional path · CFM/);
   assert.match(html, /class="formula-display"/);
+  assert.match(html, /href="#notes"/);
   assert.doesNotMatch(html, /NEXT STEP \/ PUBLISH|From Notion/);
   assert.match(html, /From noise to structure/i);
   assert.match(html, /og\.png/);
