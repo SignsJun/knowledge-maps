@@ -28,10 +28,9 @@ test("server-renders the public learning notes homepage", async () => {
   assert.match(html, /03 notes/);
   assert.match(html, /THE LEARNING MAP \/ GENERATIVE MODELS/);
   assert.match(html, /从噪声/);
-  assert.match(html, /Forward process · reverse denoising · ELBO/);
-  assert.doesNotMatch(html, /反向后验|最后把分布连续地搬运起来/);
+  assert.match(html, /先理解扩散，再学习方向/);
+  assert.doesNotMatch(html, /Forward process · reverse denoising|Score function · DSM|Conditional path · CFM/);
   assert.match(html, /class="formula-display"/);
-  assert.doesNotMatch(html, /class="heading-note"/);
   assert.doesNotMatch(html, /NEXT STEP \/ PUBLISH|From Notion/);
   assert.match(html, /From noise to structure/i);
   assert.match(html, /og\.png/);
