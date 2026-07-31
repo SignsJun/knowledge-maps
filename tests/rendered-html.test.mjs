@@ -28,6 +28,8 @@ test("server-renders the public learning notes homepage", async () => {
   assert.match(html, /03 notes/);
   assert.match(html, /THE LEARNING MAP \/ GENERATIVE MODELS/);
   assert.match(html, /从噪声/);
+  assert.match(html, /class="formula-display"/);
+  assert.doesNotMatch(html, /NEXT STEP \/ PUBLISH|From Notion/);
   assert.match(html, /From noise to structure/i);
   assert.match(html, /og\.png/);
   assert.doesNotMatch(html, /Yifan|Positional Encoding|Swin-Transformer|ResShift|Rectified Flow|MeanFlow/i);

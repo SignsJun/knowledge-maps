@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Note = {
   title: string;
@@ -75,6 +75,12 @@ const noteSnapshots = [
   },
 ];
 
+const summaryFormulas: Record<string, string> = {
+  DDPM: String.raw`x_t = \sqrt{\bar{\alpha}_t}\,x_0 + \sqrt{1-\bar{\alpha}_t}\,\epsilon`,
+  "Score matching": String.raw`s_\theta(\mathbf{x}) \approx \nabla_{\mathbf{x}}\log p(\mathbf{x})`,
+  "Flow matching": String.raw`\frac{\mathrm{d}}{\mathrm{d}t}\psi_t(\mathbf{x}) = u_t\!\left(\psi_t(\mathbf{x})\right)`,
+};
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState("All notes");
   const [activeSnapshot, setActiveSnapshot] = useState("DDPM");
@@ -84,6 +90,19 @@ export default function Home() {
     [activeTab],
   );
   const snapshot = noteSnapshots.find((item) => item.key === activeSnapshot) ?? noteSnapshots[0];
+
+  useEffect(() => {
+    const formula = document.querySelector(".formula-display");
+    const mathJax = (window as typeof window & {
+      MathJax?: { typesetPromise?: (elements?: Element[]) => Promise<void> };
+    }).MathJax;
+    if (!formula || !mathJax?.typesetPromise) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      mathJax.typesetPromise?.([formula]).catch(() => undefined);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeSnapshot]);
 
   return (
     <main>
@@ -97,7 +116,7 @@ export default function Home() {
           <a href="#map">The map</a>
           <a href="#about">About</a>
         </div>
-        <a className="nav-cta" href="#publish">Read on GitHub <span aria-hidden="true">→</span></a>
+        <a className="nav-cta" href="https://github.com/SignsJun/knowledge-maps" target="_blank" rel="noreferrer">Open repository <span aria-hidden="true">→</span></a>
       </nav>
 
       <section className="hero shell" id="top">
@@ -172,7 +191,13 @@ export default function Home() {
             <h2>{snapshot.title}</h2>
             <p>{snapshot.body}</p>
           </div>
-          <div className="formula-card"><span>THE SHORT VERSION</span><strong>{snapshot.formula}</strong><small>intuition → objective → sampler</small></div>
+          <div className="formula-card" aria-live="polite">
+            <span className="formula-label">THE SHORT VERSION</span>
+            <div key={snapshot.key} className="formula-display" aria-label={`${snapshot.key} summary formula`}>
+              {`\\[${summaryFormulas[snapshot.key]}\\]`}
+            </div>
+            <small className="formula-note">intuition → objective → sampler</small>
+          </div>
         </div>
       </section>
 
@@ -226,19 +251,6 @@ export default function Home() {
               <a className="row-arrow" href={`./notes/${note.title === "DDPM" ? "ddpm" : note.title === "Score matching" ? "score-matching" : "flow-matching"}/`} aria-label={`打开 ${note.title}`}>→</a>
             </article>
           ))}
-        </div>
-      </section>
-
-      <section className="publish-section shell" id="publish">
-        <div className="publish-card">
-          <div className="publish-copy"><p className="section-label">NEXT STEP / PUBLISH</p><h2>From Notion<br /><em>to the open web.</em></h2><p>三篇笔记已经整理到仓库的 notes/ 目录。以后从 Notion 导出 Markdown，再把内容更新到这里，就能持续留下你的学习轨迹。</p><a className="button button-light" href="https://github.com/SignsJun/knowledge-maps" target="_blank" rel="noreferrer">Open the repository <span aria-hidden="true">→</span></a></div>
-          <div className="publish-flow" aria-label="Notion 到 GitHub Pages 的发布流程">
-            <div><span className="flow-icon notion">N</span><small>write</small><strong>Notion</strong></div>
-            <span className="flow-arrow">→</span>
-            <div><span className="flow-icon markdown">MD</span><small>export</small><strong>Markdown</strong></div>
-            <span className="flow-arrow">→</span>
-            <div><span className="flow-icon github">◈</span><small>share</small><strong>GitHub Pages</strong></div>
-          </div>
         </div>
       </section>
 

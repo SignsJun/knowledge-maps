@@ -101,7 +101,7 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
       </header>
 
       <div className="note-body shell">
-        <aside className="note-aside"><span>IN THIS NOTE</span><a href="#read">Read through</a><a href="../../#notes">All three notes</a><a href="../../#publish">About this site</a></aside>
+        <aside className="note-aside"><span>IN THIS NOTE</span><a href="#read">Read through</a><a href="../../#notes">All three notes</a><a href="../../#map">The learning map</a></aside>
         <article className="note-content notion-rendered" id="read" dangerouslySetInnerHTML={{ __html: html }} />
       </div>
 
