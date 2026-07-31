@@ -58,8 +58,9 @@ test("pre-renders the three note pages as readable web pages", async () => {
 
   for (const html of pages) {
     assert.match(html, /class="note-page"/);
-    assert.match(html, /class="note-equation"/);
-    assert.match(html, /class="note-callout/);
+    assert.match(html, /class="math-block"/);
+    assert.match(html, /mathjax@3/);
+    assert.match(html, /作者：|原始笔记：/);
     assert.match(html, /GENERATIVE MODEL NOTES/);
     assert.doesNotMatch(html, /<body>\s*#|```markdown|react-loading-skeleton/i);
   }
